@@ -188,6 +188,38 @@
             100% { transform: rotate(-180deg); opacity: 0; }
         }
 
+        /* --- DOWNLOAD BUTTON --- */
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            color: #000;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 15px 40px;
+            border-radius: 50px;
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
+            margin: 20px 0;
+            border: 2px solid transparent;
+        }
+
+        .btn-download:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(15, 240, 252, 0.6);
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            color: #fff;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        .btn-download i {
+            font-size: 1.3rem;
+        }
+
         /* --- Typography --- */
         h1 {
             font-family: 'Orbitron', sans-serif;
@@ -455,19 +487,29 @@
         </section>
 
         <!-- INSTALLAZIONE -->
-        <section>
+        <section style="text-align: center;">
             <h2 class="lang-it"><i class="fas fa-download"></i> Installazione</h2>
             <h2 class="lang-en hidden"><i class="fas fa-download"></i> Installation</h2>
-            <ol class="lang-it" style="margin-left: 20px;">
-                <li>Scarica il file <strong>stikki.lua</strong>.</li>
-                <li>Copialo nella cartella <code>/SCRIPTS/TELEMETRY/</code> o <code>/SCRIPTS/FUNCTIONS/</code> della SD Card.</li>
-                <li>Configura la pagina Telemetria o Funzioni Speciali della radio per eseguire lo script.</li>
-            </ol>
-            <ol class="lang-en hidden" style="margin-left: 20px;">
-                <li>Download the <strong>stikki.lua</strong> file.</li>
-                <li>Copy it to the <code>/SCRIPTS/TELEMETRY/</code> or <code>/SCRIPTS/FUNCTIONS/</code> folder on your SD Card.</li>
-                <li>Configure your radio's Telemetry or Special Functions page to run the script.</li>
-            </ol>
+            
+            <!-- DOWNLOAD BUTTON -->
+            <a href="./stikki.lua" download="stikki.lua" class="btn-download">
+                <i class="fas fa-file-download"></i> 
+                <span class="lang-it">DOWNLOAD stikki.lua</span>
+                <span class="lang-en hidden">DOWNLOAD stikki.lua</span>
+            </a>
+
+            <div style="text-align: left; margin-top: 20px;">
+                <ol class="lang-it" style="margin-left: 20px;">
+                    <li>Clicca il pulsante sopra per scaricare lo script.</li>
+                    <li>Copia il file <code>stikki.lua</code> nella cartella <code>/SCRIPTS/TELEMETRY/</code> o <code>/SCRIPTS/FUNCTIONS/</code> della SD Card.</li>
+                    <li>Configura la pagina Telemetria o Funzioni Speciali della radio per eseguire lo script.</li>
+                </ol>
+                <ol class="lang-en hidden" style="margin-left: 20px;">
+                    <li>Click the button above to download the script.</li>
+                    <li>Copy the <code>stikki.lua</code> file to the <code>/SCRIPTS/TELEMETRY/</code> or <code>/SCRIPTS/FUNCTIONS/</code> folder on your SD Card.</li>
+                    <li>Configure your radio's Telemetry or Special Functions page to run the script.</li>
+                </ol>
+            </div>
         </section>
 
         <!-- GUIDA MENU -->
@@ -567,7 +609,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 stikki FX Guide.</p>
+        <p>&copy; 2026 IKKI SOLUTIONS -  stikki FX Guide.</p>
     </footer>
 
     <script>
