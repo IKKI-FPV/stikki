@@ -27,9 +27,10 @@ Le radio non hanno abbastanza memoria per gestire menu complessi, salvataggi e a
 
 ### Configurazione Radio (Mixer)
 Per cambiare i 6 temi in volo, configura il **Canale 14** (o quello definito nello script) su uno switch a 6 posizioni.
-*(Vedi l'immagine allegata nella repository per i settaggi esatti dei Mixes)*.
 
-**Valori Switch:**
+**Copia esattamente questi valori nei Mixer:**
+![Settaggi Mixer](image_sw.jpg)
+
 * Pos 1: -100% (Cometa)
 * Pos 2: -60%  (Arcobaleno)
 * Pos 3: -20%  (Strobo)
@@ -43,31 +44,6 @@ Lancia lo script `stikkis.lua`.
 * **S1 / S2:** Regolano i parametri.
 * **Menu 0 (FLASH VERDE):** Salva e Genera il file.
 
-EFFETTI E REGOLAZIONI (LIVELLO 4)
-------------------------------------
-TEMA 1 - COMETA
-   S1: Lunghezza Coda
-   S2: BPM Battito Sfondo
-
-TEMA 2 - ARCOBALENO
-   S1: Velocita' Rotazione
-   S2: Intensita' Battito (0 = Fisso, >0 = Pulsante)
-
-TEMA 3 - STROBO
-   S1: Frequenza Strobo
-   S2: Soglia Attivazione (Sensibilita' stick)
-
-TEMA 4 - SCANNER (Parentesi)
-   S1: Velocita' Scansione
-   S2: Larghezza Apertura
-
-TEMA 5 - BLINK (Alternato)
-   S1: BPM Lampeggio
-   S2: Riservato
-
-TEMA 6 - SPARKLES (Brillantini)
-   S1: Frequenza Scintillio
-   S2: Densita' basata sul Gas
 ---
 
 ## 🇬🇧 ENGLISH
@@ -89,9 +65,10 @@ LED scripts often cause **Memory Errors** or **Latency** because they try to do 
 
 ### Radio Setup (Mixes)
 Configure **Channel 14** with a 6-position switch to change themes.
-*(See the included image in the repository for the exact Mixes setup)*.
 
-**Switch Values:**
+**Copy these Mixer values exactly:**
+![Mixer Settings](image_sw.jpg)
+
 * Pos 1: -100% (Comet)
 * Pos 2: -60%  (Rainbow)
 * Pos 3: -20%  (Strobe)
@@ -105,20 +82,5 @@ Run `stikkis.lua`.
 * **S1 / S2:** Adjust parameters.
 * **Menu 0 (GREEN FLASH):** Save & Generate File.
 
-MENU LEVELS:
-- Level 0 (GREEN FLASH): EXIT & SAVE. Generates the flight file.
-- Level 1 (WHITE FLASH x1): Select Effect Mode.
-- Level 2 (WHITE FLASH x2): Color (S1=Theme, S2=Pointer).
-- Level 3 (WHITE FLASH x3): Brightness.
-- Level 4 (WHITE FLASH x4): Dynamics (See below).
-
- EFFECTS & PARAMETERS (LEVEL 4)
----------------------------------
-1. COMET:    S1=Tail Length, S2=Background Heartbeat BPM.
-2. RAINBOW:  S1=Rotation Speed, S2=Heartbeat (0=Solid).
-3. STROBE:   S1=Frequency, S2=Trigger Threshold.
-4. SCANNER:  S1=Scan Speed, S2=Gap Width.
-5. BLINK:    S1=Blink BPM, S2=Reserved.
-6. SPARKLES: S1=Sparkle Freq, S2=Density vs Throttle.
 ---
 *Powered by IKKI Solutions*
