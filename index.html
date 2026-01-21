@@ -1,633 +1,124 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Heartbeat & Larsen LED Script</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0a0b10;
-            --card-bg: #161823;
-            --text-main: #e0e0e0;
-            --text-muted: #a0a0a0;
-            --accent-purple: #bc13fe; 
-            --accent-cyan: #0ff0fc;   
-            --accent-green: #00ff9d;  
-            --glow-purple: 0 0 10px rgba(188, 19, 254, 0.6), 0 0 20px rgba(188, 19, 254, 0.3);
-            --glow-cyan: 0 0 10px rgba(15, 240, 252, 0.6), 0 0 20px rgba(15, 240, 252, 0.3);
-            --glow-green: 0 0 10px rgba(0, 255, 157, 0.6);
-        }
+# STIKKIS by IKKI Solutions
+### Advanced RGB LED Controller for EdgeTX / OpenTX
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+> **"IKKI Solutions è nata per creare soluzioni. Con STIKKIS, crediamo di esserci riusciti ancora una volta."**
+>
+> **"IKKI Solutions was born to create solutions. With STIKKIS, we believe we've succeeded once again."**
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+---
 
-        /* --- Header & Nav --- */
-        header {
-            text-align: center;
-            padding: 40px 20px 60px 20px;
-            background: radial-gradient(circle at center, #1a1d2e 0%, var(--bg-color) 80%);
-            border-bottom: 2px solid var(--accent-purple);
-            box-shadow: var(--glow-purple);
-            position: relative;
-            overflow: hidden;
-        }
+## 🇮🇹 ITALIANO
 
-        /* --- DRONE MASCOT (Side View from uploaded file) --- */
-        .drone-container {
-            width: 200px;  /* Larghezza aumentata per la vista laterale */
-            height: 110px;
-            margin: 0 auto 10px auto;
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 15px var(--accent-cyan));
-        }
+### Il Problema & La Soluzione
+Chi usa script LUA per i LED conosce bene il problema: **"Script Syntax Error"** o **"CPU Limit Reached"**. 
+Le radio non hanno abbastanza memoria per gestire menu complessi, salvataggi e animazioni fluide contemporaneamente nello stesso file.
 
-        .drone-svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible; 
-        }
+**STIKKIS risolve il problema alla radice separando i compiti:**
+1.  **Il Configuratore (`stikkis.lua`):** Lo usi solo a terra. Gestisce l'interfaccia, i colori e le impostazioni.
+2.  **Il Generatore:** Quando salvi, STIKKIS **scrive un nuovo file ottimizzato** (es. `IKKI_1.lua`) che contiene *solo* la matematica necessaria per il volo.
 
-        /* Animazione Eliche Vista Laterale (ScaleX) */
-        .spin-prop-side {
-            transform-box: fill-box;
-            transform-origin: center;
-            animation: propSpinSide 0.1s linear infinite;
-        }
+**Risultato:** Configurazioni complesse a terra, leggerezza assoluta in volo. Nessun compromesso.
 
-        /* Corpo e dettagli adattati al tema */
-        .drone-body-shape {
-            fill: rgba(22, 24, 35, 0.95);
-            stroke: var(--accent-purple); /* Era rosso, ora Viola */
-            stroke-width: 2;
-        }
-        
-        .drone-arm-line {
-            stroke: #555;
-            stroke-width: 4;
-            stroke-linecap: round;
-        }
+### Installazione
+1.  Copia il file `stikkis.lua` nella cartella `/SCRIPTS/` della SD (o nella cartella che preferisci per lanciarlo).
+2.  **IMPORTANTE:** Crea una cartella chiamata `RGBLED` dentro `/SCRIPTS/`.
+    * Percorso: `/SCRIPTS/RGBLED/`
+    * *Senza questa cartella, lo script non può generare i file di volo.*
 
-        .drone-motor {
-            fill: #111;
-        }
+### Configurazione Radio (Mixer)
+Per cambiare i 6 temi in volo, configura il **Canale 14** (o quello definito nello script) su uno switch a 6 posizioni.
+*(Vedi l'immagine allegata nella repository per i settaggi esatti dei Mixes)*.
 
-        .drone-eye-point {
-            fill: var(--accent-cyan); /* Era verde, ora Ciano */
-            animation: blink 4s infinite;
-        }
-        
-        .drone-prop-shape {
-            fill: rgba(255,255,255,0.6);
-            stroke: #fff;
-            stroke-width: 1;
-        }
+**Valori Switch:**
+* Pos 1: -100% (Cometa)
+* Pos 2: -60%  (Arcobaleno)
+* Pos 3: -20%  (Strobo)
+* Pos 4: +20%  (Scanner)
+* Pos 5: +60%  (Blink)
+* Pos 6: +100% (Sparkles)
 
-        /* --- VISUAL STICK ANIMATION --- */
-        .larsen-visual {
-            display: flex;
-            justify-content: center;
-            gap: 80px;
-            margin-top: 40px;
-            margin-bottom: 20px;
-        }
+### Guida Rapida
+Lancia lo script `stikkis.lua`.
+* **SF (Doppio Click):** Cambia pagina menu (0-4).
+* **S1 / S2:** Regolano i parametri.
+* **Menu 0 (FLASH VERDE):** Salva e Genera il file.
 
-        .stick-ring {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            position: relative;
-            background: rgba(255, 255, 255, 0.02);
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
+EFFETTI E REGOLAZIONI (LIVELLO 4)
+------------------------------------
+TEMA 1 - COMETA
+   S1: Lunghezza Coda
+   S2: BPM Battito Sfondo
 
-        /* --- ANELLO SINISTRO (HEARTBEAT - VIOLA) --- */
-        .ring-left {
-            --ring-color: var(--accent-purple);
-            box-shadow: 0 0 0 rgba(188, 19, 254, 0); 
-            animation: heartbeat-glow 1.3s ease-out infinite;
-        }
-        
-        .ring-left::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%; height: 80%;
-            background: var(--accent-purple);
-            border-radius: 50%;
-            opacity: 0.1;
-            animation: heartbeat-inner 1.3s ease-out infinite;
-        }
+TEMA 2 - ARCOBALENO
+   S1: Velocita' Rotazione
+   S2: Intensita' Battito (0 = Fisso, >0 = Pulsante)
 
-        @keyframes heartbeat-glow {
-            0% { box-shadow: 0 0 0 rgba(188, 19, 254, 0); border-color: rgba(188, 19, 254, 0.2); }
-            10% { box-shadow: 0 0 20px rgba(188, 19, 254, 0.8); border-color: rgba(188, 19, 254, 1); } 
-            20% { box-shadow: 0 0 5px rgba(188, 19, 254, 0.2); border-color: rgba(188, 19, 254, 0.3); }
-            30% { box-shadow: 0 0 15px rgba(188, 19, 254, 0.6); border-color: rgba(188, 19, 254, 0.8); } 
-            60% { box-shadow: 0 0 0 rgba(188, 19, 254, 0); border-color: rgba(188, 19, 254, 0.1); }
-            100% { box-shadow: 0 0 0 rgba(188, 19, 254, 0); border-color: rgba(188, 19, 254, 0.1); }
-        }
+TEMA 3 - STROBO
+   S1: Frequenza Strobo
+   S2: Soglia Attivazione (Sensibilita' stick)
 
-        @keyframes heartbeat-inner {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.1; }
-            10% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-            20% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.2; }
-            30% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.4; }
-            60% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.1; }
-            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.1; }
-        }
+TEMA 4 - SCANNER (Parentesi)
+   S1: Velocita' Scansione
+   S2: Larghezza Apertura
 
-        /* --- ANELLO DESTRO (LARSEN - CIANO) --- */
-        .ring-right { 
-            --ring-color: var(--accent-cyan); 
-        }
+TEMA 5 - BLINK (Alternato)
+   S1: BPM Lampeggio
+   S2: Riservato
 
-        .ring-right::before,
-        .ring-right::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            border: 4px solid transparent; 
-            border-top-color: var(--ring-color);
-            border-left-color: transparent;
-            border-right-color: transparent;
-            border-bottom-color: transparent;
-            filter: drop-shadow(0 0 8px var(--ring-color));
-        }
+TEMA 6 - SPARKLES (Brillantini)
+   S1: Frequenza Scintillio
+   S2: Densita' basata sul Gas
+---
 
-        .ring-right::before {
-            animation: split-cw 1.5s ease-in-out infinite;
-        }
-        .ring-right::after {
-            animation: split-ccw 1.5s ease-in-out infinite;
-        }
+## 🇬🇧 ENGLISH
 
-        @keyframes split-cw {
-            0% { transform: rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { transform: rotate(180deg); opacity: 0; }
-        }
+### The Problem & The Solution
+LED scripts often cause **Memory Errors** or **Latency** because they try to do too much (UI, saving, animations) in a single file.
 
-        @keyframes split-ccw {
-            0% { transform: rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { transform: rotate(-180deg); opacity: 0; }
-        }
+**STIKKIS solves this by separating the workflow:**
+1.  **The Configurator (`stikkis.lua`):** Used only on the ground for setup.
+2.  **The Generator:** When you save, it **writes a brand new, optimized file** (e.g., `IKKI_1.lua`) containing *only* the flight code.
 
-        /* --- DOWNLOAD BUTTON --- */
-        .btn-download {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
-            color: #000;
-            text-decoration: none;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            font-size: 1.1rem;
-            padding: 15px 40px;
-            border-radius: 50px;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
-            margin: 20px 0;
-            border: 2px solid transparent;
-        }
+**Result:** Advanced features on the ground, zero overhead in the air.
 
-        .btn-download:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 40px rgba(15, 240, 252, 0.6);
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-            color: #fff;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
-        }
+### Installation
+1.  Copy `stikkis.lua` to your SD Card's `/SCRIPTS/` folder.
+2.  **CRITICAL:** Create a folder named `RGBLED` inside `/SCRIPTS/`.
+    * Path: `/SCRIPTS/RGBLED/`
+    * *The script needs this folder to save the generated files.*
 
-        .btn-download i {
-            font-size: 1.3rem;
-        }
+### Radio Setup (Mixes)
+Configure **Channel 14** with a 6-position switch to change themes.
+*(See the included image in the repository for the exact Mixes setup)*.
 
-        /* --- Typography --- */
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            color: #fff;
-            text-transform: uppercase;
-            text-shadow: 0 0 15px var(--accent-purple);
-            margin-bottom: 5px;
-            z-index: 10;
-            position: relative;
-        }
+**Switch Values:**
+* Pos 1: -100% (Comet)
+* Pos 2: -60%  (Rainbow)
+* Pos 3: -20%  (Strobe)
+* Pos 4: +20%  (Scanner)
+* Pos 5: +60%  (Blink)
+* Pos 6: +100% (Sparkles)
 
-        .subtitle {
-            color: var(--accent-cyan);
-            font-size: 1.1rem;
-            text-shadow: 0 0 8px var(--accent-cyan);
-            z-index: 10;
-            position: relative;
-        }
+### Quick Start
+Run `stikkis.lua`.
+* **SF (Double Click):** Next Menu Page.
+* **S1 / S2:** Adjust parameters.
+* **Menu 0 (GREEN FLASH):** Save & Generate File.
 
-        /* --- Language Switcher --- */
-        .lang-switch {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 100;
-        }
+MENU LEVELS:
+- Level 0 (GREEN FLASH): EXIT & SAVE. Generates the flight file.
+- Level 1 (WHITE FLASH x1): Select Effect Mode.
+- Level 2 (WHITE FLASH x2): Color (S1=Theme, S2=Pointer).
+- Level 3 (WHITE FLASH x3): Brightness.
+- Level 4 (WHITE FLASH x4): Dynamics (See below).
 
-        .btn-lang {
-            background: transparent;
-            border: 1px solid var(--accent-cyan);
-            color: var(--accent-cyan);
-            padding: 5px 15px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            transition: 0.3s;
-            border-radius: 4px;
-        }
-
-        .btn-lang:hover, .btn-lang.active {
-            background: var(--accent-cyan);
-            color: #000;
-            box-shadow: var(--glow-cyan);
-        }
-
-        /* --- Main Content --- */
-        .container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        section {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        section::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 4px; height: 100%;
-            background: linear-gradient(to bottom, var(--accent-purple), var(--accent-cyan));
-        }
-
-        h2 {
-            font-family: 'Orbitron', sans-serif;
-            color: #fff;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-        }
-
-        p, li { margin-bottom: 15px; color: var(--text-muted); }
-        strong { color: #fff; }
-
-        /* --- Feature Grid --- */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .feature-box {
-            background: rgba(255,255,255,0.03);
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
-        }
-
-        .feature-box:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-purple);
-            box-shadow: var(--glow-purple);
-        }
-
-        .icon {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            color: var(--accent-cyan);
-        }
-
-        /* --- Controls Visualization --- */
-        .controls-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .control-step {
-            display: flex;
-            align-items: center;
-            background: rgba(0,0,0,0.2);
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 3px solid transparent;
-        }
-
-        .control-step.c-purple { border-left-color: var(--accent-purple); }
-        .control-step.c-cyan { border-left-color: var(--accent-cyan); }
-        .control-step.c-green { border-left-color: var(--accent-green); }
-
-        .badge {
-            font-family: 'Orbitron', sans-serif;
-            padding: 5px 10px;
-            border-radius: 4px;
-            background: #333;
-            color: #fff;
-            margin-right: 15px;
-            min-width: 80px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        .badge.sf { background: #e91e63; box-shadow: 0 0 10px #e91e6380; }
-        .badge.s1 { background: var(--accent-purple); color: #000; }
-        .badge.s2 { background: var(--accent-cyan); color: #000; }
-
-        /* --- Animations --- */
-        @keyframes propSpinSide { 
-            0% { transform: scaleX(1); opacity: 0.8; } 
-            50% { transform: scaleX(0.1); opacity: 0.4; } 
-            100% { transform: scaleX(1); opacity: 0.8; } 
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-        @keyframes blink {
-            0%, 48%, 52%, 100% { transform: scaleY(1); }
-            50% { transform: scaleY(0.1); }
-        }
-
-        /* --- Footer --- */
-        footer {
-            text-align: center;
-            padding: 40px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: 50px;
-        }
-
-        /* --- Utilities --- */
-        .hidden { display: none !important; }
-        .highlight { color: var(--accent-cyan); font-weight: bold; }
-        .highlight-p { color: var(--accent-purple); font-weight: bold; }
-        .highlight-g { color: var(--accent-green); font-weight: bold; }
-
-        /* --- Responsive --- */
-        @media (max-width: 768px) {
-            h1 { font-size: 1.8rem; }
-            .grid { grid-template-columns: 1fr; }
-            .control-step { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .larsen-visual { gap: 20px; }
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="lang-switch">
-            <button class="btn-lang active" onclick="setLang('it')">IT</button>
-            <button class="btn-lang" onclick="setLang('en')">EN</button>
-        </div>
-
-        <!-- MASCOTTE DRONE SVG (Nuova dal file caricato - Vista laterale) -->
-        <div class="drone-container">
-            <svg class="drone-svg" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Corpo centrale -->
-                <!-- Originale: M60 40 H100 L95 50 H65 Z -->
-                <path d="M60 40 H100 L95 50 H65 Z" class="drone-body-shape"/>
-                
-                <!-- Occhio/Luce -->
-                <!-- Originale: cx="100" cy="42" r="3" -->
-                <circle cx="100" cy="42" r="3" class="drone-eye-point"/>
-                
-                <!-- Bracci -->
-                <line x1="65" y1="40" x2="45" y2="25" class="drone-arm-line"/> 
-                <line x1="95" y1="40" x2="115" y2="25" class="drone-arm-line"/> 
-                
-                <!-- Motori -->
-                <rect x="40" y="20" width="10" height="8" class="drone-motor"/>
-                <rect x="110" y="20" width="10" height="8" class="drone-motor"/>
-                
-                <!-- Eliche (Spin Laterale) -->
-                <g class="spin-prop-side" style="transform-origin: 45px 20px;">
-                    <ellipse cx="45" cy="20" rx="25" ry="2" class="drone-prop-shape"/>
-                </g>
-                <g class="spin-prop-side" style="transform-origin: 115px 20px;">
-                    <ellipse cx="115" cy="20" rx="25" ry="2" class="drone-prop-shape"/>
-                </g>
-            </svg>
-        </div>
-
-        <h1>stikki FX</h1>
-        <div class="subtitle lang-it">Script LED Avanzato per EdgeTX / OpenTX</div>
-        <div class="subtitle lang-en hidden">Advanced LED Script for EdgeTX / OpenTX</div>
-
-        <!-- VISUAL ANIMATION: Left=Heartbeat, Right=Larsen -->
-        <div class="larsen-visual">
-            <div class="stick-ring ring-left" title="Resting State: Heartbeat"></div>
-            <div class="stick-ring ring-right" title="Active State: Larsen"></div>
-        </div>
-    </header>
-
-    <div class="container">
-
-        <!-- INTRO -->
-        <section>
-            <h2 class="lang-it"><i class="fas fa-microchip"></i> Funzionalità Principali</h2>
-            <h2 class="lang-en hidden"><i class="fas fa-microchip"></i> Core Features</h2>
-            
-            <div class="grid">
-                <div class="feature-box">
-                    <i class="fas fa-heartbeat icon"></i>
-                    <h3 class="lang-it">Effetto Heartbeat</h3>
-                    <p class="lang-it">Quando gli stick sono al centro, i LED pulsano come un cuore vero. (Vedi anello VIOLA sopra)</p>
-                    <h3 class="lang-en hidden">Heartbeat Effect</h3>
-                    <p class="lang-en hidden">When sticks are centered, LEDs pulse like a real heart. (See PURPLE ring above)</p>
-                </div>
-                <div class="feature-box">
-                    <i class="fas fa-wind icon"></i>
-                    <h3 class="lang-it">Effetto Larsen</h3>
-                    <p class="lang-it">Muovi gli stick e il battito si sdoppia: due scie luminose partono da un punto e convergono all'opposto. (Vedi anello CIANO sopra)</p>
-                    <h3 class="lang-en hidden">Larsen Effect</h3>
-                    <p class="lang-en hidden">Move the sticks and the heartbeat splits: two light trails start from a point and converge at the opposite side. (See CYAN ring above)</p>
-                </div>
-                <div class="feature-box">
-                    <i class="fas fa-sliders-h icon"></i>
-                    <h3 class="lang-it">Menu Integrato</h3>
-                    <p class="lang-it">Configura colori, luminosità e velocità direttamente dalla radio usando gli stick e i potenziometri.</p>
-                    <h3 class="lang-en hidden">Integrated Menu</h3>
-                    <p class="lang-en hidden">Configure colors, brightness, and speed directly from the radio using sticks and pots.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- INSTALLAZIONE -->
-        <section style="text-align: center;">
-            <h2 class="lang-it"><i class="fas fa-download"></i> Installazione</h2>
-            <h2 class="lang-en hidden"><i class="fas fa-download"></i> Installation</h2>
-            
-            <!-- DOWNLOAD BUTTON -->
-            <a href="./stikki.lua" download="stikki.lua" class="btn-download">
-                <i class="fas fa-file-download"></i> 
-                <span class="lang-it">DOWNLOAD stikki.lua</span>
-                <span class="lang-en hidden">DOWNLOAD stikki.lua</span>
-            </a>
-
-            <div style="text-align: left; margin-top: 20px;">
-                <ol class="lang-it" style="margin-left: 20px;">
-                    <li>Clicca il pulsante sopra per scaricare lo script.</li>
-                    <li>Copia il file <code>stikki.lua</code> nella cartella <code>/SCRIPTS/TELEMETRY/</code> o <code>/SCRIPTS/FUNCTIONS/</code> della SD Card.</li>
-                    <li>Configura la pagina Telemetria o Funzioni Speciali della radio per eseguire lo script.</li>
-                </ol>
-                <ol class="lang-en hidden" style="margin-left: 20px;">
-                    <li>Click the button above to download the script.</li>
-                    <li>Copy the <code>stikki.lua</code> file to the <code>/SCRIPTS/TELEMETRY/</code> or <code>/SCRIPTS/FUNCTIONS/</code> folder on your SD Card.</li>
-                    <li>Configure your radio's Telemetry or Special Functions page to run the script.</li>
-                </ol>
-            </div>
-        </section>
-
-        <!-- GUIDA MENU -->
-        <section>
-            <h2 class="lang-it"><i class="fas fa-gamepad"></i> Guida al Menu di Configurazione</h2>
-            <h2 class="lang-en hidden"><i class="fas fa-gamepad"></i> Configuration Menu Guide</h2>
-            
-            <p class="lang-it">Il sistema utilizza l'interruttore <span class="badge sf">SF</span> come grilletto. I potenziometri <span class="badge s1">S1</span> e <span class="badge s2">S2</span> cambiano funzione in base al livello.</p>
-            <p class="lang-en hidden">The system uses switch <span class="badge sf">SF</span> as a trigger. Potentiometers <span class="badge s1">S1</span> and <span class="badge s2">S2</span> change function based on the level.</p>
-
-            <div class="controls-wrapper">
-                <!-- STEP 1 -->
-                <div class="control-step c-purple">
-                    <span class="badge sf">2x CLICK</span>
-                    <div>
-                        <div class="lang-it">
-                            <strong>Entra Livello 1: COLORI</strong> <span class="highlight">(1 Flash Bianco)</span><br>
-                            <span class="badge s1">S1</span> Cambia il colore del TEMA (Cuore + Sfondo).<br>
-                            <span class="badge s2">S2</span> Cambia il colore del PUNTATORE.
-                        </div>
-                        <div class="lang-en hidden">
-                            <strong>Enter Level 1: COLORS</strong> <span class="highlight">(1 White Flash)</span><br>
-                            <span class="badge s1">S1</span> Changes THEME color (Heart + Background).<br>
-                            <span class="badge s2">S2</span> Changes POINTER color.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP 2 -->
-                <div class="control-step c-cyan">
-                    <span class="badge sf">2x CLICK</span>
-                    <div>
-                        <div class="lang-it">
-                            <strong>Entra Livello 2: LUMINOSITÀ</strong> <span class="highlight">(2 Flash Bianchi)</span><br>
-                            <span class="badge s1">S1</span> Regola intensità del CUORE.<br>
-                            <span class="badge s2">S2</span> Regola intensità del PUNTATORE.
-                        </div>
-                        <div class="lang-en hidden">
-                            <strong>Enter Level 2: BRIGHTNESS</strong> <span class="highlight">(2 White Flashes)</span><br>
-                            <span class="badge s1">S1</span> Adjusts HEART intensity.<br>
-                            <span class="badge s2">S2</span> Adjusts POINTER intensity.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- STEP 3 -->
-                <div class="control-step c-purple">
-                    <span class="badge sf">2x CLICK</span>
-                    <div>
-                        <div class="lang-it">
-                            <strong>Entra Livello 3: TEMPO</strong> <span class="highlight">(3 Flash Bianchi)</span><br>
-                            <span class="badge s1">S1</span> Regola velocità Battito (BPM).<br>
-                            <span class="badge s2">S2</span> Regola durata Pausa (Sistole/Diastole).
-                        </div>
-                        <div class="lang-en hidden">
-                            <strong>Enter Level 3: TIMING</strong> <span class="highlight">(3 White Flashes)</span><br>
-                            <span class="badge s1">S1</span> Adjusts Heartbeat Speed (BPM).<br>
-                            <span class="badge s2">S2</span> Adjusts Pause Duration (Systole/Diastole).
-                        </div>
-                    </div>
-                </div>
-
-                <!-- EXIT -->
-                <div class="control-step c-green">
-                    <span class="badge sf">2x CLICK</span>
-                    <div>
-                        <div class="lang-it">
-                            <strong>USCITA & MEMORIA</strong> <span class="highlight-g">(1 Flash VERDE)</span><br>
-                            Esce dal menu. I potenziometri S1/S2 smettono di controllare i LED e tornano alle funzioni normali della radio. I valori sono mantenuti in memoria finché la radio è accesa.
-                        </div>
-                        <div class="lang-en hidden">
-                            <strong>EXIT & MEMORY</strong> <span class="highlight-g">(1 GREEN Flash)</span><br>
-                            Exits the menu. Pots S1/S2 stop controlling LEDs and return to normal radio functions. Values are kept in memory while the radio is on.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SAFETY LOCK -->
-        <section>
-            <h2 class="lang-it"><i class="fas fa-shield-alt"></i> Funzione "Soft-Lock"</h2>
-            <h2 class="lang-en hidden"><i class="fas fa-shield-alt"></i> "Soft-Lock" Feature</h2>
-            
-            <p class="lang-it">
-                Per evitare cambiamenti accidentali quando si passa da un menu all'altro, i potenziometri hanno un <strong>blocco di sicurezza</strong>. 
-                Quando entri in un nuovo livello, girare la manopola non avrà effetto finché non la muovi di un piccolo scatto (circa 5%). 
-                Questo impedisce al valore di "saltare" improvvisamente alla posizione fisica attuale della manopola.
-            </p>
-            <p class="lang-en hidden">
-                To prevent accidental changes when switching menus, potentiometers have a <strong>safety lock</strong>. 
-                When entering a new level, turning the knob won't have an effect until you move it slightly (about 5%). 
-                This prevents the value from suddenly "jumping" to the knob's current physical position.
-            </p>
-        </section>
-
-    </div>
-
-    <footer>
-        <p>&copy; 2026 IKKI SOLUTIONS -  stikki FX Guide.</p>
-    </footer>
-
-    <script>
-        function setLang(lang) {
-            // Rimuovi active buttons
-            document.querySelectorAll('.btn-lang').forEach(btn => btn.classList.remove('active'));
-            // Setta active quello giusto
-            event.target.classList.add('active');
-
-            // Gestione visualizzazione
-            if (lang === 'it') {
-                document.querySelectorAll('.lang-it').forEach(el => el.classList.remove('hidden'));
-                document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
-            } else {
-                document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
-                document.querySelectorAll('.lang-it').forEach(el => el.classList.add('hidden'));
-            }
-        }
-    </script>
-</body>
-</html>
+ EFFECTS & PARAMETERS (LEVEL 4)
+---------------------------------
+1. COMET:    S1=Tail Length, S2=Background Heartbeat BPM.
+2. RAINBOW:  S1=Rotation Speed, S2=Heartbeat (0=Solid).
+3. STROBE:   S1=Frequency, S2=Trigger Threshold.
+4. SCANNER:  S1=Scan Speed, S2=Gap Width.
+5. BLINK:    S1=Blink BPM, S2=Reserved.
+6. SPARKLES: S1=Sparkle Freq, S2=Density vs Throttle.
+---
+*Powered by IKKI Solutions*
