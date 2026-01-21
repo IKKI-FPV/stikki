@@ -25,6 +25,18 @@ Le radio non hanno abbastanza memoria per gestire menu complessi, salvataggi e a
     * Percorso: `/SCRIPTS/RGBLED/`
     * *Senza questa cartella, lo script non può generare i file di volo.*
 
+### Configurazione Radio (Inputs)
+Affinché i potenziometri S1 e S2 controllino i parametri degli effetti, è necessario attivarli nella pagina **INPUTS** del modello.
+
+**Copia queste impostazioni:**
+1. Vai nella pagina **INPUTS**.
+2. Crea due nuovi ingressi (dopo i 4 stick principali).
+3. **Input S1:** Imposta "Source" su **S1** e "Weight" su **100%**.
+4. **Input S2:** Imposta "Source" su **S2** e "Weight" su **100%**.
+
+![Lista Inputs](image_s1.jpg)
+![Dettaglio Input S1](image_s2.jpg)
+
 ### Configurazione Radio (Mixer)
 Per cambiare i 6 temi in volo, configura il **Canale 14** (o quello definito nello script) su uno switch a 6 posizioni.
 
@@ -62,6 +74,18 @@ LED scripts often cause **Memory Errors** or **Latency** because they try to do 
 2.  **CRITICAL:** Create a folder named `RGBLED` inside `/SCRIPTS/`.
     * Path: `/SCRIPTS/RGBLED/`
     * *The script needs this folder to save the generated files.*
+
+### Radio Setup (Inputs)
+To allow the S1 and S2 knobs to control effect parameters, you must enable them in the **INPUTS** tab of your model.
+
+**Copy these settings:**
+1. Go to the **INPUTS** tab.
+2. Create two new input lines (after your main sticks).
+3. **Input S1:** Set "Source" to **S1** and "Weight" to **100%**.
+4. **Input S2:** Set "Source" to **S2** and "Weight" to **100%**.
+
+![Inputs List](image_s1.jpg)
+![Input Detail](image_s2.jpg)
 
 ### Radio Setup (Mixes)
 Configure **Channel 14** with a 6-position switch to change themes.
