@@ -55,7 +55,8 @@ Lancia lo script `stikkis.lua`.
 * **S1 / S2:** Regolano i parametri.
 * **Menu 0 (FLASH VERDE):** Salva e Genera il file.
 
-4. STRUTTURA DEI LIVELLI DI REGOLAZIONE
+
+STRUTTURA DEI LIVELLI DI REGOLAZIONE
 ---------------------------------------
 Usa lo switch SF (Doppio Click) per navigare tra i livelli.
 I LED lampeggeranno di BIANCO per indicare il livello corrente.
@@ -79,7 +80,7 @@ I LED lampeggeranno di BIANCO per indicare il livello corrente.
   Vedi la tabella sottostante.
 
 
-5. GUIDA REGOLAZIONI LIVELLO 4 (DINAMICA)
+GUIDA REGOLAZIONI LIVELLO 4 (DINAMICA)
 -----------------------------------------
 
 [ TEMA 1 ] COMETA
@@ -174,7 +175,8 @@ Run the script stikkis.lua.
 
     Menu 0 (GREEN FLASH): Save and Generate file.
 
-    4. MENU LEVELS STRUCTURE
+
+MENU' LEVEL STRUCTURE
 ------------------------
 Use SF Switch (Double Click) to cycle levels. LEDs flash WHITE to indicate level.
 
@@ -196,7 +198,7 @@ Use SF Switch (Double Click) to cycle levels. LEDs flash WHITE to indicate level
   S1 and S2 functions change based on the selected theme. See below.
 
 
-5. LEVEL 4 ADJUSTMENT GUIDE
+LEVEL 4 ADJUSTMENT GUIDE
 ---------------------------
 
 [ THEME 1 ] COMET
