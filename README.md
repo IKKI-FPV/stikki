@@ -10,14 +10,13 @@
 ## 🇮🇹 ITALIANO
 
 ### Il Problema & La Soluzione
-Chi usa script LUA per i LED conosce bene il problema: **"Script Syntax Error"** o **"CPU Limit Reached"**. 
-Le radio non hanno abbastanza memoria per gestire menu complessi, salvataggi e animazioni fluide contemporaneamente nello stesso file.
+Chi usa script LUA per i LED sa benissimo che le opzioni sono davvero poche e gli effetti molto semplici.
 
-**STIKKIS risolve il problema alla radice separando i compiti:**
-1.  **Il Configuratore (`stikkis.lua`):** Lo usi solo a terra. Gestisce l'interfaccia, i colori e le impostazioni.
+**STIKKIS risolve il problema alla radice offrendo un sistema che permette di personalizzare gli script senza dover poi impegnare i canali o gli switch per tale scopo, separando i compiti:**
+1.  **Il Configuratore (`stikkis.lua`):** Lo usi solo a banco. Gestisce l'interfaccia, i colori e le impostazioni.
 2.  **Il Generatore:** Quando salvi, STIKKIS **scrive un nuovo file ottimizzato** (es. `IKKI_1.lua`) che contiene *solo* la matematica necessaria per il volo.
 
-**Risultato:** Configurazioni complesse a terra, leggerezza assoluta in volo. Nessun compromesso.
+**Risultato:** Configurazioni complesse a terra, leggerezza assoluta durante il reale utilizzo. Nessun compromesso.
 
 ### Installazione
 1.  Copia il file `stikkis.lua` nella cartella `/SCRIPTS/` della SD (o nella cartella che preferisci per lanciarlo).
@@ -58,53 +57,68 @@ Lancia lo script `stikkis.lua`.
 
 ---
 
-## 🇬🇧 ENGLISH
+🇬🇧 ENGLISH
+The Problem & The Solution
 
-### The Problem & The Solution
-LED scripts often cause **Memory Errors** or **Latency** because they try to do too much (UI, saving, animations) in a single file.
+Anyone using LUA scripts for LEDs knows very well that options are scarce and effects are very basic.
 
-**STIKKIS solves this by separating the workflow:**
-1.  **The Configurator (`stikkis.lua`):** Used only on the ground for setup.
-2.  **The Generator:** When you save, it **writes a brand new, optimized file** (e.g., `IKKI_1.lua`) containing *only* the flight code.
+STIKKIS solves this problem at the root by offering a system that allows you to customize scripts without having to commit channels or switches for that purpose, by separating the tasks:
 
-**Result:** Advanced features on the ground, zero overhead in the air.
+    The Configurator (stikkis.lua): Used only on the bench. It handles the interface, colors, and settings.
 
-### Installation
-1.  Copy `stikkis.lua` to your SD Card's `/SCRIPTS/` folder.
-2.  **CRITICAL:** Create a folder named `RGBLED` inside `/SCRIPTS/`.
-    * Path: `/SCRIPTS/RGBLED/`
-    * *The script needs this folder to save the generated files.*
+    The Generator: When you save, STIKKIS writes a new optimized file (e.g., IKKI_1.lua) containing only the math needed for flight.
 
-### Radio Setup (Inputs)
-To allow the S1 and S2 knobs to control effect parameters, you must enable them in the **INPUTS** tab of your model.
+Result: Complex configurations on the ground, absolute lightness during actual use. No compromises.
+Installation
 
-**Copy these settings:**
-1. Go to the **INPUTS** tab.
-2. Create two new input lines (after your main sticks).
-3. **Input S1:** Set "Source" to **S1** and "Weight" to **100%**.
-4. **Input S2:** Set "Source" to **S2** and "Weight" to **100%**.
+    Copy the stikkis.lua file to the /SCRIPTS/ folder on your SD card (or whichever folder you prefer to launch it from).
 
-![Inputs List](image_s1.jpg)
-![Input Detail](image_s2.jpg)
+    IMPORTANT: Create a folder named RGBLED inside /SCRIPTS/.
 
-### Radio Setup (Mixes)
-Configure **Channel 14** with a 6-position switch to change themes.
+        Path: /SCRIPTS/RGBLED/
 
-**Copy these Mixer values exactly:**
-![Mixer Settings](image_sw.jpg)
+        Without this folder, the script cannot generate flight files.
 
-* Pos 1: -100% (Comet)
-* Pos 2: -60%  (Rainbow)
-* Pos 3: -20%  (Strobe)
-* Pos 4: +20%  (Scanner)
-* Pos 5: +60%  (Blink)
-* Pos 6: +100% (Sparkles)
+Radio Setup (Inputs)
 
-### Quick Start
-Run `stikkis.lua`.
-* **SF (Double Click):** Next Menu Page.
-* **S1 / S2:** Adjust parameters.
-* **Menu 0 (GREEN FLASH):** Save & Generate File.
+For potentiometers S1 and S2 to control effect parameters, you must activate them in the model's INPUTS page.
 
----
-*Powered by IKKI Solutions*
+Copy these settings:
+
+    Go to the INPUTS page.
+
+    Create two new inputs (after the 4 main sticks).
+
+    Input S1: Set "Source" to S1 and "Weight" to 100%.
+
+    Input S2: Set "Source" to S2 and "Weight" to 100%.
+
+Radio Setup (Mixer)
+
+To change the 6 themes in flight, configure Channel 14 (or the one defined in the script) to a 6-position switch.
+
+Copy these exact values in the Mixer:
+
+    Pos 1: -100% (Comet)
+
+    Pos 2: -60% (Rainbow)
+
+    Pos 3: -20% (Strobe)
+
+    Pos 4: +20% (Scanner)
+
+    Pos 5: +60% (Blink)
+
+    Pos 6: +100% (Sparkles)
+
+Quick Start
+
+Run the script stikkis.lua.
+
+    SF (Double Click): Change menu page (0-4).
+
+    S1 / S2: Adjust parameters.
+
+    Menu 0 (GREEN FLASH): Save and Generate file.
+
+Powered by IKKI Solutions
