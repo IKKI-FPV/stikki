@@ -55,6 +55,59 @@ Lancia lo script `stikkis.lua`.
 * **S1 / S2:** Regolano i parametri.
 * **Menu 0 (FLASH VERDE):** Salva e Genera il file.
 
+4. STRUTTURA DEI LIVELLI DI REGOLAZIONE
+---------------------------------------
+Usa lo switch SF (Doppio Click) per navigare tra i livelli.
+I LED lampeggeranno di BIANCO per indicare il livello corrente.
+
+> LIVELLO 0 (FLASH VERDE): SALVATAGGIO
+  Esce dal menu e genera automaticamente il file di volo "IKKI_x.lua".
+
+> LIVELLO 1 (1 Flash): SELEZIONE TEMA
+  Usa lo switch a 6 posizioni (CH14) per scegliere l'effetto da modificare.
+
+> LIVELLO 2 (2 Flash): COLORE
+  S1 (SX): Tonalita' Colore Tema (Sfondo)
+  S2 (DX): Tonalita' Colore Puntatore (Stick)
+
+> LIVELLO 3 (3 Flash): LUMINOSITA'
+  S1 (SX): Luminosita' Tema
+  S2 (DX): Luminosita' Puntatore
+
+> LIVELLO 4 (4 Flash): DINAMICA & FISICA
+  In questo livello, S1 e S2 cambiano funzione in base al tema scelto.
+  Vedi la tabella sottostante.
+
+
+5. GUIDA REGOLAZIONI LIVELLO 4 (DINAMICA)
+-----------------------------------------
+
+[ TEMA 1 ] COMETA
+  - S1: Lunghezza Coda
+  - S2: BPM Battito (Regola la velocita' del "cuore" di sfondo)
+
+[ TEMA 2 ] ARCOBALENO
+  - S1: Velocita' Rotazione
+  - S2: Intensita' Battito (0 = Sfondo Fisso / >0 = Attiva Pulsazione)
+
+[ TEMA 3 ] STROBO
+  - S1: Frequenza Strobo
+  - S2: Soglia Attivazione (Quanto stick serve per attivare l'effetto)
+
+[ TEMA 4 ] SCANNER (Parentesi)
+  - S1: Velocita' Scansione
+  - S2: Larghezza Gap (Allarga lo spazio centrale tra le parentesi)
+
+[ TEMA 5 ] BLINK (Alternato)
+  - S1: BPM Lampeggio
+  - S2: Riservato
+
+[ TEMA 6 ] SPARKLES (Brillantini)
+  - S1: Frequenza Scintillio (Velocita' luccichio)
+  - S2: Curva Densita' (Quantita' di stelle basata sul Gas)
+
+=========================================================================
+
 ---
 
 🇬🇧 ENGLISH
@@ -120,5 +173,58 @@ Run the script stikkis.lua.
     S1 / S2: Adjust parameters.
 
     Menu 0 (GREEN FLASH): Save and Generate file.
+
+    4. MENU LEVELS STRUCTURE
+------------------------
+Use SF Switch (Double Click) to cycle levels. LEDs flash WHITE to indicate level.
+
+> LEVEL 0 (GREEN FLASH): SAVE & EXIT
+  Generates the optimized flight file "IKKI_x.lua".
+
+> LEVEL 1 (1 Flash): THEME SELECTION
+  Use the 6-pos switch (CH14) to select the effect to edit.
+
+> LEVEL 2 (2 Flashes): COLOR
+  S1 (Left): Theme Color (Background)
+  S2 (Right): Pointer Color (Stick)
+
+> LEVEL 3 (3 Flashes): BRIGHTNESS
+  S1 (Left): Theme Brightness
+  S2 (Right): Pointer Brightness
+
+> LEVEL 4 (4 Flashes): DYNAMICS & PHYSICS
+  S1 and S2 functions change based on the selected theme. See below.
+
+
+5. LEVEL 4 ADJUSTMENT GUIDE
+---------------------------
+
+[ THEME 1 ] COMET
+  - S1: Tail Length
+  - S2: Heartbeat BPM (Background pulse speed)
+
+[ THEME 2 ] RAINBOW
+  - S1: Rotation Speed
+  - S2: Heartbeat Depth (0 = Solid / >0 = Adds Pulsation)
+
+[ THEME 3 ] STROBE
+  - S1: Frequency
+  - S2: Threshold (Stick input required to activate)
+
+[ THEME 4 ] SCANNER (Brackets)
+  - S1: Scan Speed
+  - S2: Gap Width (Widens the center gap)
+
+[ THEME 5 ] BLINK (Alternating)
+  - S1: Blink BPM
+  - S2: Reserved
+
+[ THEME 6 ] SPARKLES
+  - S1: Sparkle Freq. (Glitter speed)
+  - S2: Density Curve (Amount vs Throttle)
+
+=========================================================================
+
+    
 
 Powered by IKKI Solutions
