@@ -14,7 +14,7 @@ Chi usa script LUA per i LED sa benissimo che le opzioni sono davvero poche e gl
 
 **STIKKIS risolve il problema alla radice offrendo un sistema che permette di personalizzare gli script senza dover poi impegnare i canali o gli switch per tale scopo, separando i compiti:**
 1.  **Il Configuratore (`stikkis.lua`):** Lo usi solo a banco. Gestisce l'interfaccia, i colori e le impostazioni.
-2.  **Il Generatore:** Quando salvi, STIKKIS **scrive un nuovo file ottimizzato** (es. `IKKI_1.lua`) che contiene *solo* la matematica necessaria per il volo.
+2.  **Il Generatore:** Quando salvi, STIKKIS **scrive un nuovo file ottimizzato** (es. `IKKI_1.lua`) che contiene *solo* la matematica necessaria per l'effetto creato.
 
 **Risultato:** Configurazioni complesse a terra, leggerezza assoluta durante il reale utilizzo. Nessun compromesso.
 
@@ -66,8 +66,8 @@ STIKKIS solves this problem at the root by offering a system that allows you to 
 
     The Configurator (stikkis.lua): Used only on the bench. It handles the interface, colors, and settings.
 
-    The Generator: When you save, STIKKIS writes a new optimized file (e.g., IKKI_1.lua) containing only the math needed for flight.
-
+    The Generator: When you save, STIKKIS writes a new optimized file (e.g., IKKI_1.lua) containing only the mathematics needed for the RGB effect you just created.
+    
 Result: Complex configurations on the ground, absolute lightness during actual use. No compromises.
 Installation
 
